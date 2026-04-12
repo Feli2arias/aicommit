@@ -31,11 +31,19 @@ export function loadConfig(): Config {
 
   const globalConfigPath = getGlobalConfigPath()
   if (existsSync(globalConfigPath)) {
-    global = JSON.parse(readFileSync(globalConfigPath, 'utf8')) as Partial<Config>
+    try {
+      global = JSON.parse(readFileSync(globalConfigPath, 'utf8')) as Partial<Config>
+    } catch {
+      throw new Error(`Invalid JSON in ${globalConfigPath}. Fix or delete it to continue.`)
+    }
   }
 
   if (existsSync(LOCAL_CONFIG_PATH)) {
-    local = JSON.parse(readFileSync(LOCAL_CONFIG_PATH, 'utf8')) as Partial<Config>
+    try {
+      local = JSON.parse(readFileSync(LOCAL_CONFIG_PATH, 'utf8')) as Partial<Config>
+    } catch {
+      throw new Error(`Invalid JSON in .aicommit config file. Fix or delete it to continue.`)
+    }
   }
 
   return { ...DEFAULTS, ...global, ...local }
