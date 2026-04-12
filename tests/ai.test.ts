@@ -45,6 +45,9 @@ describe('createProvider — anthropic', () => {
 
   it('calls Anthropic API and returns message', async () => {
     global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
       json: () => Promise.resolve({ content: [{ text: 'fix(auth): fix token bug' }] }),
     }) as unknown as typeof fetch
 
@@ -72,6 +75,9 @@ describe('createProvider — ollama', () => {
 
   it('calls Ollama local endpoint and returns message', async () => {
     global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
       json: () => Promise.resolve({ message: { content: 'chore: update deps' } }),
     }) as unknown as typeof fetch
 

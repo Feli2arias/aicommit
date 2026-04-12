@@ -30,20 +30,28 @@ class AnthropicProvider implements AIProvider {
   constructor(private apiKey: string, private model: string) {}
 
   async generate(prompt: { system: string; user: string }): Promise<string> {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': this.apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: this.model,
-        max_tokens: 100,
-        system: prompt.system,
-        messages: [{ role: 'user', content: prompt.user }],
-      }),
-    })
+    let res: Response
+    try {
+      res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': this.apiKey,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: this.model,
+          max_tokens: 100,
+          system: prompt.system,
+          messages: [{ role: 'user', content: prompt.user }],
+        }),
+      })
+    } catch (err) {
+      throw new Error(`Anthropic API request failed: ${(err as Error).message}`)
+    }
+    if (!res.ok) {
+      throw new Error(`Anthropic API error: ${res.status} ${res.statusText}`)
+    }
     const data = (await res.json()) as { content: Array<{ text: string }> }
     return data.content[0]?.text ?? ''
   }
@@ -53,18 +61,26 @@ class OllamaProvider implements AIProvider {
   constructor(private model: string) {}
 
   async generate(prompt: { system: string; user: string }): Promise<string> {
-    const res = await fetch('http://localhost:11434/api/chat', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        model: this.model,
-        stream: false,
-        messages: [
-          { role: 'system', content: prompt.system },
-          { role: 'user', content: prompt.user },
-        ],
-      }),
-    })
+    let res: Response
+    try {
+      res = await fetch('http://localhost:11434/api/chat', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          model: this.model,
+          stream: false,
+          messages: [
+            { role: 'system', content: prompt.system },
+            { role: 'user', content: prompt.user },
+          ],
+        }),
+      })
+    } catch (err) {
+      throw new Error(`Ollama request failed (is Ollama running?): ${(err as Error).message}`)
+    }
+    if (!res.ok) {
+      throw new Error(`Ollama error: ${res.status} ${res.statusText}`)
+    }
     const data = (await res.json()) as { message: { content: string } }
     return data.message?.content ?? ''
   }
