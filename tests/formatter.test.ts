@@ -7,7 +7,7 @@ describe('formatMessage', () => {
   })
 
   it('collapses multiple newlines into a single space', () => {
-    expect(formatMessage('feat: add\n\nthing')).toBe('feat: add  thing')
+    expect(formatMessage('feat: add\n\nthing')).toBe('feat: add thing')
   })
 
   it('truncates message to 72 characters', () => {
