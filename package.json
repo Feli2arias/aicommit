@@ -1,0 +1,32 @@
+{
+  "name": "aicommit",
+  "version": "0.1.0",
+  "description": "Generate perfect git commit messages with AI in 1 second",
+  "type": "module",
+  "bin": {
+    "aicommit": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": ["git", "commit", "ai", "conventional-commits", "cli"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": ["dist"],
+  "dependencies": {
+    "commander": "^12.0.0",
+    "openai": "^4.0.0"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^1.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  }
+}
