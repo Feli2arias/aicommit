@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`buildPrompt > matches snapshot 1`] = `
+{
+  "system": "You are a git commit message generator. Follow these rules exactly:
+- Return ONLY the commit message. No explanation, no markdown, no preamble.
+- Format: type(scope): description
+- Valid types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+- Keep the subject line under 72 characters.
+- Infer the scope from the file paths changed in the diff.
+- Infer the commit type from the nature of the changes.",
+  "user": "Generate a commit message for the following git diff:
+
+diff --git a/foo.ts b/foo.ts
++const x = 1",
+}
+`;
