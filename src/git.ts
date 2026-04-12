@@ -1,4 +1,4 @@
-import { execSync } from 'child_process'
+import { execSync, execFileSync } from 'child_process'
 
 export function getStagedDiff(): string {
   const diff = execSync('git diff --cached', { encoding: 'utf8' })
@@ -12,10 +12,10 @@ export function truncateDiff(diff: string, maxChars = 12000): string {
   if (diff.length <= maxChars) return diff
   const approxTokens = Math.round(diff.length / 4)
   console.warn(`⚠  Diff truncated to ~3000 tokens (was ~${approxTokens} tokens)`)
-  return diff.slice(0, maxChars)
+  const cutPoint = diff.lastIndexOf('\n', maxChars)
+  return diff.slice(0, cutPoint > 0 ? cutPoint : maxChars)
 }
 
 export function commitWithMessage(message: string): void {
-  const escaped = message.replace(/"/g, '\\"')
-  execSync(`git commit -m "${escaped}"`, { stdio: 'inherit' })
+  execFileSync('git', ['commit', '-m', message], { stdio: 'inherit' })
 }
