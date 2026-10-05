@@ -139,4 +139,4 @@ Want to add a new AI provider? See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT
+[MIT](LICENSE)
