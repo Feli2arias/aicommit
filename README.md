@@ -1,12 +1,12 @@
 <div align="center">
 
-# ⚡ aicommit
+# aicommit
 
 **Generate perfect git commit messages with AI — in 1 second.**
 
-[![npm version](https://img.shields.io/npm/v/aicommit?color=brightgreen&style=flat-square)](https://www.npmjs.com/package/aicommit)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18-brightgreen?style=flat-square)](https://nodejs.org)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square)
 
 ```
 git add .
@@ -32,9 +32,17 @@ Every developer writes commit messages dozens of times a week. Most are vague ("
 
 ## Install
 
+aicommit is not published on npm yet, so install it from source:
+
 ```bash
-npm install -g aicommit
+git clone https://github.com/Feli2arias/aicommit.git
+cd aicommit
+npm install
+npm run build
+npm link
 ```
+
+`npm link` puts the `aicommit` command on your PATH. Requires Node.js 18 or newer.
 
 ## Usage
 
@@ -43,7 +51,7 @@ git add .
 aicommit
 ```
 
-On first run, aicommit walks you through setup (provider + API key). After that, one command is all you need.
+On first run, aicommit walks you through setup (provider, model and API key) and saves it. After that, one command is all you need. At the prompt: `y` commits, `n` cancels, `r` regenerates and `e` lets you edit the message.
 
 ## Flags
 
@@ -72,7 +80,7 @@ aicommit --type fix
 |---|---|---|---|
 | `openai` | `gpt-4o-mini` | ~$0.001/commit | Fast, cheap, great quality |
 | `anthropic` | `claude-3-haiku-20240307` | ~$0.001/commit | Excellent reasoning |
-| `ollama` | `llama3` | Free | 100% local, no API key needed |
+| `ollama` | `llama3` | Free | 100% local, no API key needed (expects Ollama at `localhost:11434`) |
 
 ## Configuration
 
@@ -97,11 +105,11 @@ Drop a `.aicommit` file in your repo root to enforce a consistent setup across y
 }
 ```
 
-Project-level config always wins over the global one.
+Project-level config always wins over the global one. Don't put an `apiKey` in the per-repo file if you commit it; keep the key in the global config.
 
 ## How it works
 
-1. Reads your staged diff with `git diff --cached`
+1. Reads your staged diff with `git diff --cached` (truncated to about 3,000 tokens for large diffs)
 2. Sends the diff to your chosen AI provider with a strict prompt
 3. The AI returns a single Conventional Commits message
 4. You confirm, edit, regenerate, or cancel — then it commits
@@ -111,6 +119,14 @@ The prompt enforces:
 - Subject line under 72 characters
 - Scope inferred from changed file paths
 - No markdown, no explanation — just the commit message
+
+## Development
+
+```bash
+npm run build          # bundle with tsup
+npm test               # run the Vitest suite
+npm run test:coverage  # with coverage
+```
 
 ## Requirements
 
